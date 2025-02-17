@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lo Siento 💔</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #fce4ec;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: 50px auto;
+        }
+        h1 {
+            color: #d32f2f;
+        }
+        p {
+            font-size: 18px;
+            color: #444;
+        }
+        .heart {
+            font-size: 50px;
+            color: red;
+            animation: heartbeat 1.5s infinite;
+        }
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .accept {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .accept:hover {
+            background-color: #388E3C;
+        }
+        .reject {
+            background-color: #d32f2f;
+            color: white;
+        }
+        .reject:hover {
+            background-color: #b71c1c;
+        }
+        #fireworks {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            z-index: 9999;
+        }
+        #sadFace {
+            display: none;
+            font-size: 100px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Lo siento 💔</h1>
+        <p>Cometí un error al ser celoso y estoy profundamente arrepentido.  
+        No quiero perderte, eres lo mejor que me ha pasado.  
+        ¿Podemos intentarlo de nuevo? 🙏</p>
+        
+        <div class="heart">❤️</div>
+        
+        <div class="buttons">
+            <button class="accept" onclick="aceptar()">Aceptar 😍</button>
+            <button class="reject" onclick="rechazar()">No aceptar 😢</button>
+        </div>
+
+        <div id="sadFace">😞</div>
+    </div>
+
+    <canvas id="fireworks"></canvas>
+
+    <script>
+        function aceptar() {
+            let canvas = document.getElementById("fireworks");
+            let ctx = canvas.getContext("2d");
+
+            canvas.style.display = "block";
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            let fireworks = [];
+
+            function Firework(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.radius = 2;
+                this.explosionSize = Math.random() * 5 + 3;
+                this.speed = Math.random() * 3 + 2;
+                this.lifetime = 60;
+            }
+
+            Firework.prototype.update = function () {
+                this.y -= this.speed;
+                this.lifetime--;
+            };
+
+            Firework.prototype.draw = function () {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            };
+
+            function createExplosion(x, y) {
+                let colors = ["red", "yellow", "blue", "green", "orange", "purple"];
+                for (let i = 0; i < 50; i++) {
+                    fireworks.push(new Firework(x, y, colors[Math.floor(Math.random() * colors.length)]));
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let i = fireworks.length - 1; i >= 0; i--) {
+                    fireworks[i].update();
+                    fireworks[i].draw();
+                    if (fireworks[i].lifetime <= 0) {
+                        fireworks.splice(i, 1);
+                    }
+                }
+                if (fireworks.length > 0) {
+                    requestAnimationFrame(animate);
+                } else {
+                    canvas.style.display = "none";
+                }
+            }
+
+            for (let i = 0; i < 5; i++) {
+                createExplosion(Math.random() * canvas.width, Math.random() * canvas.height / 2 + canvas.height / 4);
+            }
+            animate();
+        }
+
+        function rechazar() {
+            document.getElementById("sadFace").style.display = "block";
+        }
+    </script>
+
+</body>
+</html>
